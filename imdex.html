@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>No Boat No Vote Tool</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+</head>
+<body>
+
+<h2>No Boat No Vote</h2>
+
+<input type="file" id="upload">
+
+<div class="controls">
+  <button onclick="zoomIn()">Zoom +</button>
+  <button onclick="zoomOut()">Zoom -</button>
+  <button onclick="download()">Download</button>
+</div>
+
+<canvas id="canvas" width="400" height="400"></canvas>
+
+<script>
+const canvas = new fabric.Canvas('canvas', {
+  preserveObjectStacking: true
+});
+
+// Upload Image
+document.getElementById('upload').onchange = function(e){
+  const reader = new FileReader();
+  reader.onload = function(){
+    fabric.Image.fromURL(reader.result, function(img){
+      img.set({
+        left: 0,
+        top: 0,
+        selectable: true,
+        scaleX: 1,
+        scaleY: 1
+      });
+      canvas.clear();
+      canvas.add(img);
+      addFrame();
+      canvas.sendToBack(img);
+    });
+  }
+  reader.readAsDataURL(e.target.files[0]);
+};
+
+// Frame Overlay
+function addFrame(){
+  fabric.Image.fromURL('frame.png', function(frame){
+    frame.set({
+      selectable: false,
+      evented: false,
+      left: 0,
+      top: 0,
+      scaleX: canvas.width / frame.width,
+      scaleY: canvas.height / frame.height
+    });
+    canvas.add(frame);
+    frame.bringToFront();
+  });
+}
+
+// Zoom
+function zoomIn(){
+  canvas.getObjects()[0]?.scale(1.1);
+  canvas.renderAll();
+}
+
+function zoomOut(){
+  canvas.getObjects()[0]?.scale(0.9);
+  canvas.renderAll();
+}
+
+// Download
+function download(){
+  const link = document.createElement("a");
+  link.download = "noboatnovote.png";
+  link.href = canvas.toDataURL({
+    format: 'png',
+    quality: 1
+  });
+  link.click();
+}
+</script>
+
+</body>
+</html>
