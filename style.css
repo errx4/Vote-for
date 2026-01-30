@@ -1,0 +1,14 @@
+body {
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+canvas {
+  border: 1px solid #ccc;
+  max-width: 100%;
+}
+
+.controls button {
+  margin: 5px;
+  padding: 10px 15px;
+}
